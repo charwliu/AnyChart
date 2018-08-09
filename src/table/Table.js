@@ -2431,6 +2431,7 @@ anychart.tableModule.Table.prototype.disposeInternal = function() {
   goog.dispose(this.labelsFactory_);
   goog.dispose(this.layer_);
   goog.dispose(this.contentLayer_);
+  goog.dispose(this.contextMenu_);
   delete this.settingsObj;
   anychart.tableModule.Table.base(this, 'disposeInternal');
 };
@@ -2585,7 +2586,6 @@ anychart.tableModule.Table.prototype.contextMenu = function(opt_value) {
     // suppress NO_FEATURE_IN_MODULE warning
     this.contextMenu_ = anychart.window['anychart']['ui']['contextMenu'](!!goog.isObject(opt_value) && opt_value['fromTheme']);
     if (this.contextMenu_) {
-      this.registerDisposable(this.contextMenu_);
       this.contextMenu_['itemsProvider'](this.contextMenuItemsProvider);
     }
   }
@@ -2620,13 +2620,6 @@ anychart.tableModule.Table.prototype.getVersionHistoryLink = function() {
  * @protected
  */
 anychart.tableModule.Table.prototype.contextMenuItemsProvider = function(context) {
-  // For fired on MarkersFactory or LabelsFactory
-  var parentEventTarget = context['event'] ? context['event']['target'].getParentEventTarget() : null;
-  // For fired on series point (context['event']['target'] == chart)
-  var meta = context['event'] ? anychart.utils.extractTag(context['event']['domTarget']) : null;
-  var isSeries = goog.isObject(meta) && goog.isDef(meta.series) &&
-      meta.series['seriesType'] && goog.isDef(meta.index);
-  var isPointContext = isSeries || (parentEventTarget && parentEventTarget['seriesType']);
 
   var items = {};
   if (anychart.window['anychart']['exports']) {
@@ -2646,7 +2639,7 @@ anychart.tableModule.Table.prototype.contextMenuItemsProvider = function(context
     items['version-history'] = versionHistoryItem;
   }
 
-  return context['menuParent'].specificContextMenuItems(items, context, isPointContext);
+  return context['menuParent'].specificContextMenuItems(items, context);
 };
 
 
@@ -2669,12 +2662,12 @@ anychart.tableModule.Table.prototype.specificContextMenuItems = function(items, 
  */
 anychart.tableModule.Table.contextMenuItems = {
   // Item 'Export as ...'.
-  'save-chart-as': {
+  'save-table-as': {
     'index': 10,
-    'text': 'Save chart as...',
+    'text': 'Save table as...',
     'iconClass': 'ac ac-file-image-o',
     'subMenu': {
-      'save-chart-as-png': {
+      'save-table-as-png': {
         'index': 10,
         'text': '.png',
         'iconClass': 'ac ac-file-image-o',
@@ -2683,7 +2676,7 @@ anychart.tableModule.Table.contextMenuItems = {
           context['menuParent'].saveAsPng();
         }
       },
-      'save-chart-as-jpg': {
+      'save-table-as-jpg': {
         'index': 20,
         'text': '.jpg',
         'iconClass': 'ac ac-file-image-o',
@@ -2692,7 +2685,7 @@ anychart.tableModule.Table.contextMenuItems = {
           context['menuParent'].saveAsJpg();
         }
       },
-      'save-chart-as-pdf': {
+      'save-table-as-pdf': {
         'index': 30,
         'text': '.pdf',
         'iconClass': 'ac ac-file-pdf-o',
@@ -2701,7 +2694,7 @@ anychart.tableModule.Table.contextMenuItems = {
           context['menuParent'].saveAsPdf();
         }
       },
-      'save-chart-as-svg': {
+      'save-table-as-svg': {
         'index': 40,
         'text': '.svg',
         'iconClass': 'ac ac-file-code-o',
@@ -2786,7 +2779,7 @@ anychart.tableModule.Table.contextMenuItems = {
   },
 
   // Item 'Print Chart'.
-  'print-chart': {
+  'print-table': {
     'index': 50,
     'text': 'Print',
     'iconClass': 'ac ac-print',
@@ -2847,10 +2840,10 @@ anychart.tableModule.Table.contextMenuItems = {
 anychart.tableModule.Table.contextMenuMap = {
   // Menu 'Default menu'.
   'exporting': {
-    'save-chart-as': anychart.tableModule.Table.contextMenuItems['save-chart-as'],
+    'save-table-as': anychart.tableModule.Table.contextMenuItems['save-table-as'],
     'save-data-as': anychart.tableModule.Table.contextMenuItems['save-data-as'],
     'share-with': anychart.tableModule.Table.contextMenuItems['share-with'],
-    'print-chart': anychart.tableModule.Table.contextMenuItems['print-chart'],
+    'print-table': anychart.tableModule.Table.contextMenuItems['print-table'],
     'exporting-separator': {'index': 51}
   },
   'full-screen-enter': {
