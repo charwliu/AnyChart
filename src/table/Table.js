@@ -2620,7 +2620,6 @@ anychart.tableModule.Table.prototype.getVersionHistoryLink = function() {
  * @protected
  */
 anychart.tableModule.Table.prototype.contextMenuItemsProvider = function(context) {
-
   var items = {};
   if (anychart.window['anychart']['exports']) {
     goog.object.extend(items, /** @type {Object} */ (anychart.utils.recursiveClone(anychart.tableModule.Table.contextMenuMap['exporting'])));
