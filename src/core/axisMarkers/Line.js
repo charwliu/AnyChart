@@ -292,6 +292,7 @@ anychart.standalones.axisMarkers.line = function() {
   proto['layout'] = proto.layout;
   proto['stroke'] = proto.stroke;
   proto['isHorizontal'] = proto.isHorizontal;
+  proto['tooltip'] = proto.tooltip;
 
   proto = anychart.standalones.axisMarkers.Line.prototype;
   goog.exportSymbol('anychart.standalones.axisMarkers.line', anychart.standalones.axisMarkers.line);
