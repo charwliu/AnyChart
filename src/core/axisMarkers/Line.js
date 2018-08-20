@@ -159,10 +159,9 @@ anychart.core.axisMarkers.Line.prototype.tooltip = function(opt_value) {
   var chart = this.getChart();
   if (!this.tooltip_) {
     this.tooltip_ = new anychart.core.ui.Tooltip(0);
-    if (chart.supportsTooltip()) {
-      this.tooltip_.containerProvider(chart);
-      this.tooltip_.setup({adjustFontSize: false});
-    }
+    this.tooltip_.containerProvider(chart ? chart : this.container());
+    this.tooltip_['displayMode'](anychart.enums.TooltipDisplayMode.SINGLE);
+    this.tooltip_.setup({adjustFontSize: false});
   }
   if (goog.isDef(opt_value)) {
     this.tooltip_.setup(opt_value);
@@ -170,6 +169,22 @@ anychart.core.axisMarkers.Line.prototype.tooltip = function(opt_value) {
     return this;
   } else {
     return this.tooltip_;
+  }
+};
+
+
+anychart.core.axisMarkers.Line.prototype.onMoveHandler_ = function(e) {
+  if (this.tooltip_) {
+    var markerElement = this.markerElement();
+    var x = e.offsetX;
+    var y = e.offsetY;
+    var tooltipBounds = this.tooltip_.getContentBounds();
+    if (this.isHorizontal()) {
+      y -= (tooltipBounds.height + markerElement.strokeThickness() + 0.5);
+    } else {
+      x -= (tooltipBounds.width + markerElement.strokeThickness() + 0.5);
+    }
+    this.tooltip_.updatePosition(x, y);
   }
 };
 
