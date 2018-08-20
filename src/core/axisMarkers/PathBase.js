@@ -536,6 +536,36 @@ anychart.core.axisMarkers.PathBase.prototype.markerElement = function() {
 
 
 /**
+ * @param {acgraph.events.BrowserEvent} e
+ * @private
+ */
+anychart.core.axisMarkers.PathBase.prototype.onHoverHandler_ = function(e) {
+  e['type'] = anychart.enums.EventType.AXIS_MARKER_OVER;
+  this.dispatchEvent(e);
+};
+
+
+/**
+ * @param {acgraph.events.BrowserEvent} e
+ * @private
+ */
+anychart.core.axisMarkers.PathBase.prototype.onOutHandler_ = function(e) {
+  e['type'] = anychart.enums.EventType.AXIS_MARKER_OUT;
+  this.dispatchEvent(e);
+};
+
+
+/**
+ * @param {acgraph.events.BrowserEvent} e
+ * @private
+ */
+anychart.core.axisMarkers.PathBase.prototype.onMoveHandler_ = function(e) {
+  e['type'] = anychart.enums.EventType.AXIS_MARKER_MOVE;
+  this.dispatchEvent(e);
+};
+
+
+/**
  * Properties that should be defined in class prototype.
  * @type {!Object.<string, anychart.core.settings.PropertyDescriptor>}
  */

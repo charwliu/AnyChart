@@ -144,78 +144,7 @@ anychart.core.axisMarkers.Line.prototype.stroke = function(opt_strokeOrFill, opt
  * @return {number|anychart.core.axisMarkers.Line} - LineMarker value settings or LineMarker instance for method chaining.
  */
 anychart.core.axisMarkers.Line.prototype.value = function(opt_newValue) {
-  if (goog.isDef(opt_newValue) && this.tooltip_) {
-    this.tooltip_.contentInternal().text(opt_newValue);
-  }
   return /** @type {number|anychart.core.axisMarkers.Line} */ (this.valueInternal(opt_newValue));
-};
-
-
-/**
- * @param {Object=} opt_value
- * @return {(anychart.core.ui.Tooltip|anychart.core.axisMarkers.Line)}
- */
-anychart.core.axisMarkers.Line.prototype.tooltip = function(opt_value) {
-  var chart = this.getChart();
-  if (!this.tooltip_) {
-    this.tooltip_ = new anychart.core.ui.Tooltip(0);
-    this.tooltip_.containerProvider(chart ? chart : this.container());
-    this.tooltip_['displayMode'](anychart.enums.TooltipDisplayMode.SINGLE);
-    this.tooltip_.setup({adjustFontSize: false});
-  }
-  if (goog.isDef(opt_value)) {
-    this.tooltip_.setup(opt_value);
-    this.tooltip_.contentInternal().text(this.value());
-    return this;
-  } else {
-    return this.tooltip_;
-  }
-};
-
-
-anychart.core.axisMarkers.Line.prototype.onMoveHandler_ = function(e) {
-  if (this.tooltip_) {
-    var markerElement = this.markerElement();
-    var x = e.offsetX;
-    var y = e.offsetY;
-    var tooltipBounds = this.tooltip_.getContentBounds();
-    if (this.isHorizontal()) {
-      y -= (tooltipBounds.height + markerElement.strokeThickness() + 0.5);
-    } else {
-      x -= (tooltipBounds.width + markerElement.strokeThickness() + 0.5);
-    }
-    this.tooltip_.updatePosition(x, y);
-  }
-};
-
-
-/**
- * @param {anychart.core.MouseEvent} e
- * @private
- */
-anychart.core.axisMarkers.Line.prototype.onHoverHandler_ = function(e) {
-  if (this.tooltip_) {
-    var markerElement = this.markerElement();
-    var x = e.offsetX;
-    var y = e.offsetY;
-    var tooltipBounds = this.tooltip_.getContentBounds();
-    if (this.isHorizontal()) {
-      y -= (tooltipBounds.height + markerElement.strokeThickness() + 0.5);
-    } else {
-      x -= (tooltipBounds.width + markerElement.strokeThickness() + 0.5);
-    }
-    this.tooltip_.showFloat(x, y);
-  }
-};
-
-
-/**
- * @param {anychart.core.MouseEvent} e
- * @private
- */
-anychart.core.axisMarkers.Line.prototype.onOutHandler_ = function(e) {
-  if (this.tooltip_)
-    this.tooltip_.hide();
 };
 
 
@@ -263,8 +192,6 @@ anychart.core.axisMarkers.Line.prototype.setupByJSON = function(config, opt_defa
   anychart.core.axisMarkers.Line.base(this, 'setupByJSON', config, opt_default);
   this.value(config['value']);
   this.stroke(config['stroke']);
-  if ('tooltip' in config)
-    this.tooltip().setupInternal(!!opt_default, config['tooltip']);
 };
 
 
@@ -307,7 +234,6 @@ anychart.standalones.axisMarkers.line = function() {
   proto['layout'] = proto.layout;
   proto['stroke'] = proto.stroke;
   proto['isHorizontal'] = proto.isHorizontal;
-  proto['tooltip'] = proto.tooltip;
 
   proto = anychart.standalones.axisMarkers.Line.prototype;
   goog.exportSymbol('anychart.standalones.axisMarkers.line', anychart.standalones.axisMarkers.line);
