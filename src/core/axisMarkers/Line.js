@@ -147,6 +147,34 @@ anychart.core.axisMarkers.Line.prototype.value = function(opt_newValue) {
 };
 
 
+anychart.core.axisMarkers.Line.prototype.handleMouseEvent = function(event) {
+  console.log('mouse event');
+};
+
+
+/**
+ * @param {Object=} opt_value
+ * @return {(anychart.core.ui.Tooltip|anychart.core.axisMarkers.Line)}
+ */
+anychart.core.axisMarkers.Line.prototype.tooltip = function(opt_value) {
+  if (!this.tooltip_) {
+    this.tooltip_ = new anychart.core.ui.Tooltip(0);
+    if (this.chart_.supportsTooltip()) {
+      //this.tooltip_.parent(this.chart_.tooltip());
+      //this.tooltip_.chart(this.chart_);
+      this.tooltip_.containerProvider(this.chart_);
+      this.tooltip_.setup({adjustFontSize: false});
+    }
+  }
+  if (goog.isDef(opt_value)) {
+    this.tooltip_.setup(opt_value);
+    return this;
+  } else {
+    return this.tooltip_;
+  }
+};
+
+
 //----------------------------------------------------------------------------------------------------------------------
 //  Drawing.
 //----------------------------------------------------------------------------------------------------------------------
