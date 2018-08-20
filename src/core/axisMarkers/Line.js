@@ -143,6 +143,9 @@ anychart.core.axisMarkers.Line.prototype.stroke = function(opt_strokeOrFill, opt
  * @return {number|anychart.core.axisMarkers.Line} - LineMarker value settings or LineMarker instance for method chaining.
  */
 anychart.core.axisMarkers.Line.prototype.value = function(opt_newValue) {
+  if (goog.isDef(opt_newValue) && this.tooltip_) {
+    this.tooltip_.contentInternal().text(opt_newValue);
+  }
   return /** @type {number|anychart.core.axisMarkers.Line} */ (this.valueInternal(opt_newValue));
 };
 
@@ -161,6 +164,84 @@ anychart.core.axisMarkers.Line.prototype.tooltip = function(opt_value) {
   }
   if (goog.isDef(opt_value)) {
     this.tooltip_.setup(opt_value);
+    this.tooltip_.setup({
+      'enabled': true,
+      'title': {
+        'fontColor': anychart.core.defaultTheme.fontColorReversedNormal,
+        'text': '',
+        'fontSize': 14,
+        'rotation': 0,
+        'align': 'left',
+        'hAlign': 'left',
+        'orientation': 'top',
+        'zIndex': 1,
+        'background': {
+          'fill': 'none',
+          'stroke': 'none'
+        }
+      },
+      'contentInternal': {
+        'enabled': true,
+        'fontSize': 12,
+        'minFontSize': 9,
+        'maxFontSize': 13,
+        'fontColor': anychart.core.defaultTheme.fontColorReversedNormal,
+        'hAlign': 'left',
+        'text': 'Tooltip Text',
+        'width': '100%',
+        'height': '100%',
+        'anchor': 'left-top',
+        'offsetX': 0,
+        'offsetY': 0,
+        'position': 'left-top',
+        'adjustFontSize': {
+          'width': false,
+          'height': false
+        },
+        'padding': 0,
+        'rotation': 0,
+        'zIndex': 1,
+        'background': {
+          'disablePointerEvents': false,
+          'fill': 'none',
+          'stroke': 'none'
+        }
+      },
+      'fontSize': 12,
+      'minFontSize': 9,
+      'maxFontSize': 13,
+      'fontColor': anychart.core.defaultTheme.fontColorReversedNormal,
+      'text': 'Tooltip Text',
+      'width': null,
+      'height': null,
+      'adjustFontSize': {
+        'width': false,
+        'height': false
+      },
+      'background': {
+        'enabled': true,
+        'fill': anychart.core.defaultTheme.colorFillBackgroundReversed + anychart.core.defaultTheme.opacityStrong,
+        'corners': 3,
+        'zIndex': 0,
+        'cornerType': 'round'
+      },
+      'offsetX': 10,
+      'offsetY': 10,
+      'padding': {'top': 5, 'right': 10, 'bottom': 5, 'left': 10},
+      'valuePrefix': '',
+      'valuePostfix': '',
+      'position': 'left-top',
+      'anchor': 'left-top',
+      'hideDelay': 0,
+      'titleFormat': anychart.core.defaultTheme.returnValue,
+      'format': anychart.core.defaultTheme.returnValueWithPrefixPostfix,
+      'unionFormat': '{%joinedFormattedValues}',
+      'zIndex': 0,
+      'allowLeaveChart': true,
+      'allowLeaveScreen': false,
+      'allowLeaveStage': false
+    });
+    this.tooltip_.contentInternal().text(this.value());
     return this;
   } else {
     return this.tooltip_;
@@ -169,12 +250,23 @@ anychart.core.axisMarkers.Line.prototype.tooltip = function(opt_value) {
 
 
 anychart.core.axisMarkers.Line.prototype.onHoverHandler_ = function(e) {
-  this.tooltip_.showFloat(e.clientX, e.clientY);
+  if (this.tooltip_){
+    var x = e.offsetX;
+    var y = e.offsetY;
+    var tooltipBounds = this.tooltip_.getContentBounds();
+    if (this.isHorizontal()) {
+      y -= (tooltipBounds.height + this.markerElement_.strokeThickness() + 0.5);
+    } else {
+      x -= (tooltipBounds.width + this.markerElement_.strokeThickness() + 0.5);
+    }
+    this.tooltip_.showFloat(x, y);
+  }
 };
 
 
 anychart.core.axisMarkers.Line.prototype.onOutHandler_ = function(e) {
-
+  if (this.tooltip_)
+    this.tooltip_.hide();
 };
 
 
