@@ -179,8 +179,8 @@ anychart.core.axisMarkers.Line.prototype.tooltip = function(opt_value) {
  * @private
  */
 anychart.core.axisMarkers.Line.prototype.onHoverHandler_ = function(e) {
-  if (this.tooltip_){
-    var markerElement =  this.markerElement();
+  if (this.tooltip_) {
+    var markerElement = this.markerElement();
     var x = e.offsetX;
     var y = e.offsetY;
     var tooltipBounds = this.tooltip_.getContentBounds();
