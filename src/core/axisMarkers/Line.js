@@ -147,11 +147,6 @@ anychart.core.axisMarkers.Line.prototype.value = function(opt_newValue) {
 };
 
 
-anychart.core.axisMarkers.Line.prototype.handleMouseEvent = function(event) {
-  console.log('mouse event');
-};
-
-
 /**
  * @param {Object=} opt_value
  * @return {(anychart.core.ui.Tooltip|anychart.core.axisMarkers.Line)}
@@ -160,8 +155,6 @@ anychart.core.axisMarkers.Line.prototype.tooltip = function(opt_value) {
   if (!this.tooltip_) {
     this.tooltip_ = new anychart.core.ui.Tooltip(0);
     if (this.chart_.supportsTooltip()) {
-      //this.tooltip_.parent(this.chart_.tooltip());
-      //this.tooltip_.chart(this.chart_);
       this.tooltip_.containerProvider(this.chart_);
       this.tooltip_.setup({adjustFontSize: false});
     }
@@ -172,6 +165,16 @@ anychart.core.axisMarkers.Line.prototype.tooltip = function(opt_value) {
   } else {
     return this.tooltip_;
   }
+};
+
+
+anychart.core.axisMarkers.Line.prototype.onHoverHandler_ = function(e) {
+  this.tooltip_.showFloat(e.clientX, e.clientY);
+};
+
+
+anychart.core.axisMarkers.Line.prototype.onOutHandler_ = function(e) {
+
 };
 
 

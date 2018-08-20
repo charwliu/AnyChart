@@ -529,6 +529,7 @@ anychart.core.axisMarkers.PathBase.prototype.remove = function() {
 anychart.core.axisMarkers.PathBase.prototype.markerElement = function() {
   if (!this.markerElement_) {
     this.markerElement_ = /** @type {!acgraph.vector.Path} */(acgraph.path());
+    this.bindHandlersToGraphics(this.markerElement_, this.onHoverHandler_, this.onOutHandler_);
   }
   return this.markerElement_;
 };
