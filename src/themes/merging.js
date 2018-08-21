@@ -844,8 +844,7 @@ anychart.themes.merging.mergingMap_ = (function() {
             'milestones',
             'tasks'
           ]],
-          'stock.eventMarkers',
-          'chart.lineAxisMarker'
+          'stock.eventMarkers'
         ], '.tooltip']
       ]
     },

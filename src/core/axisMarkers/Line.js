@@ -4,7 +4,6 @@ goog.provide('anychart.standalones.axisMarkers.Line');
 goog.require('acgraph');
 goog.require('anychart.color');
 goog.require('anychart.core.axisMarkers.PathBase');
-goog.require('anychart.core.ui.Tooltip');
 
 
 
