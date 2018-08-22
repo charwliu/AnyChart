@@ -17,6 +17,7 @@ goog.require('anychart.enums');
 anychart.core.axisMarkers.PathBase = function() {
   anychart.core.axisMarkers.PathBase.base(this, 'constructor');
 
+  this.bindHandlersToComponent(this, this.onMouseEventHandler_, this.onMouseEventHandler_, null, this.onMouseEventHandler_);
   /**
    * Current value.
    * @type {*}
@@ -65,6 +66,10 @@ anychart.core.axisMarkers.PathBase = function() {
 };
 goog.inherits(anychart.core.axisMarkers.PathBase, anychart.core.VisualBase);
 
+
+anychart.core.axisMarkers.PathBase.prototype.onMouseEventHandler_ = function(e) {
+  console.log(e);
+};
 
 /**
  * @typedef {{
@@ -529,39 +534,8 @@ anychart.core.axisMarkers.PathBase.prototype.remove = function() {
 anychart.core.axisMarkers.PathBase.prototype.markerElement = function() {
   if (!this.markerElement_) {
     this.markerElement_ = /** @type {!acgraph.vector.Path} */(acgraph.path());
-    this.bindHandlersToGraphics(this.markerElement_, this.onHoverHandler_, this.onOutHandler_, null, this.onMoveHandler_);
   }
   return this.markerElement_;
-};
-
-
-/**
- * @param {acgraph.events.BrowserEvent} e
- * @private
- */
-anychart.core.axisMarkers.PathBase.prototype.onHoverHandler_ = function(e) {
-  e['type'] = anychart.enums.EventType.AXIS_MARKER_OVER;
-  this.dispatchEvent(e);
-};
-
-
-/**
- * @param {acgraph.events.BrowserEvent} e
- * @private
- */
-anychart.core.axisMarkers.PathBase.prototype.onOutHandler_ = function(e) {
-  e['type'] = anychart.enums.EventType.AXIS_MARKER_OUT;
-  this.dispatchEvent(e);
-};
-
-
-/**
- * @param {acgraph.events.BrowserEvent} e
- * @private
- */
-anychart.core.axisMarkers.PathBase.prototype.onMoveHandler_ = function(e) {
-  e['type'] = anychart.enums.EventType.AXIS_MARKER_MOVE;
-  this.dispatchEvent(e);
 };
 
 
