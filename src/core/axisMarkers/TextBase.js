@@ -98,7 +98,6 @@ anychart.core.axisMarkers.TextBase.prototype.handleMouseEvent = function(event) 
   if (evt) {
     this.dispatchEvent(evt);
   }
-  console.log(event);
 };
 
 
