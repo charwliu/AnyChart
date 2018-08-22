@@ -17,7 +17,6 @@ goog.require('anychart.enums');
 anychart.core.axisMarkers.PathBase = function() {
   anychart.core.axisMarkers.PathBase.base(this, 'constructor');
 
-  this.bindHandlersToComponent(this, this.handleMouseEvent, this.handleMouseEvent, null, this.handleMouseEvent);
   /**
    * Current value.
    * @type {*}
@@ -59,6 +58,8 @@ anychart.core.axisMarkers.PathBase = function() {
    * @private
    */
   this.markerElement_;
+
+  this.bindHandlersToComponent(this);
 
   anychart.core.settings.createDescriptorsMeta(this.descriptorsMeta, [
     ['scaleRangeMode', anychart.ConsistencyState.BOUNDS, anychart.Signal.NEEDS_RECALCULATION]
