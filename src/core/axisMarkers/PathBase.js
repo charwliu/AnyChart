@@ -17,7 +17,7 @@ goog.require('anychart.enums');
 anychart.core.axisMarkers.PathBase = function() {
   anychart.core.axisMarkers.PathBase.base(this, 'constructor');
 
-  this.bindHandlersToComponent(this, this.onMouseEventHandler_, this.onMouseEventHandler_, null, this.onMouseEventHandler_);
+  this.bindHandlersToComponent(this, this.handleMouseEvent, this.handleMouseEvent, null, this.handleMouseEvent);
   /**
    * Current value.
    * @type {*}
@@ -67,9 +67,43 @@ anychart.core.axisMarkers.PathBase = function() {
 goog.inherits(anychart.core.axisMarkers.PathBase, anychart.core.VisualBase);
 
 
-anychart.core.axisMarkers.PathBase.prototype.onMouseEventHandler_ = function(e) {
-  console.log(e);
+/**
+ * @param {anychart.core.MouseEvent} event
+ */
+anychart.core.axisMarkers.PathBase.prototype.handleMouseEvent = function(event) {
+  var evt = this.createAxisMarkerEvent_(event);
+  if (evt)
+    this.dispatchEvent(evt);
 };
+
+
+/**
+ * @param {anychart.core.MouseEvent} event
+ * @return {Object}
+ * @private
+ */
+anychart.core.axisMarkers.PathBase.prototype.createAxisMarkerEvent_ = function(event) {
+  var type = event['type'];
+  switch (type) {
+    case acgraph.events.EventType.MOUSEOUT:
+      type = anychart.enums.EventType.AXIS_MARKER_OUT;
+      break;
+    case acgraph.events.EventType.MOUSEOVER:
+      type = anychart.enums.EventType.AXIS_MARKER_OVER;
+      break;
+    case acgraph.events.EventType.MOUSEMOVE:
+      type = anychart.enums.EventType.AXIS_MARKER_MOVE;
+      break;
+    default:
+      return null;
+  }
+  return {
+    'type': type,
+    'target': this,
+    'originalEvent': event
+  };
+};
+
 
 /**
  * @typedef {{
@@ -534,6 +568,7 @@ anychart.core.axisMarkers.PathBase.prototype.remove = function() {
 anychart.core.axisMarkers.PathBase.prototype.markerElement = function() {
   if (!this.markerElement_) {
     this.markerElement_ = /** @type {!acgraph.vector.Path} */(acgraph.path());
+    this.bindHandlersToGraphics(this.markerElement_);
   }
   return this.markerElement_;
 };
