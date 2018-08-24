@@ -1776,11 +1776,10 @@ anychart.core.series.Base.prototype.getLegendIconType = function(type, context) 
  * @return {acgraph.vector.Fill|acgraph.vector.Stroke|acgraph.vector.PatternFill}
  */
 anychart.core.series.Base.prototype.getLegendIconColor = function(legendItemJson, colorType, baseColor, context) {
+  var ctx;
   if (legendItemJson) {
     if (goog.isFunction(legendItemJson)) {
-      var ctx = {
-        'sourceColor': baseColor
-      };
+      ctx = {'sourceColor': baseColor};
       legendItemJson = legendItemJson.call(ctx, ctx);
     } else {
       legendItemJson = anychart.color.serialize(
@@ -1802,6 +1801,16 @@ anychart.core.series.Base.prototype.getLegendIconColor = function(legendItemJson
         name = 'fill';
       }
     }
+
+    //NOTE: Code below is the kind of performance hack.
+    //      Here we try to escape heavyweight operations like color resolving.
+    var opt = this.normal_.getOption(name);
+    var defaultOpt = this.normal_.themeSettings[name];
+    if (goog.isFunction(opt) && (opt == defaultOpt)) {
+      ctx = {'sourceColor': baseColor};
+      return opt.call(ctx, ctx);
+    }
+
     var resolver = anychart.color.getColorResolver(name, colorType, false);
     legendItemJson = resolver(this, anychart.PointState.NORMAL, true);
   }

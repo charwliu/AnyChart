@@ -2625,6 +2625,42 @@ anychart.utils.toStyleString = function(obj) {
 };
 
 
+/**
+ *
+ * @param {number} ratio - .
+ * @param {number} opacity - .
+ * @param {string} fontColor - .
+ * @param {number=} opt_fadeStep - .
+ * @return {!acgraph.vector.LinearGradientFill}
+ */
+anychart.utils.getFadeGradient = function(ratio, opacity, fontColor, opt_fadeStep) {
+  return {
+    'keys': [
+      {
+        'offset': 0,
+        'color': fontColor,
+        'opacity': opacity
+      },
+      {
+        'offset': Math.max(ratio - (opt_fadeStep || 0.1), 0),
+        'color': fontColor,
+        'opacity': opacity
+      },
+      {
+        'offset': ratio,
+        'color': fontColor,
+        'opacity': 0
+      },
+      {
+        'offset': 1,
+        'color': fontColor,
+        'opacity': 0
+      }
+    ]
+  };
+};
+
+
 //exports
 goog.exportSymbol('anychart.utils.printUtilsBoolean', anychart.utils.printUtilsBoolean);
 goog.exportSymbol('anychart.utils.xml2json', anychart.utils.xml2json);

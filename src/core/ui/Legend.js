@@ -1439,7 +1439,7 @@ anychart.core.ui.Legend.prototype.initializeLegendItems_ = function(items) {
   sett = this.paginator_.textSettings();
   style = anychart.utils.toStyleString(sett);
   paginatorTextEl.style.cssText = style;
-  paginatorTextEl.textContent = '00 / 00';
+  paginatorTextEl.textContent = '0 / 0';
 
   for (i = 0; i < this.items_.length; i++) {
     item = this.items_[i];

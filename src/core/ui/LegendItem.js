@@ -48,6 +48,13 @@ anychart.core.ui.LegendItem = function() {
   this.predefinedBounds_ = null;
 
   /**
+   * TODO (A.Kudryavtsev): Describe.
+   * @type {number}
+   * @private
+   */
+  this.applyFontGradient_ = NaN;
+
+  /**
    * Object with default stroke for icon type that should always be with stroke.
    * @type {Object}
    * @private
@@ -743,12 +750,19 @@ anychart.core.ui.LegendItem.prototype.draw = function() {
       textY = horizontalAxis - maxTextSegmentHeight / 2;
     } else {
       horizontalAxis = this.pixelBounds_.height / 2;
-      textY = horizontalAxis - this.textElement_.getBounds().height / 2;
+      textY = horizontalAxis - this.predefinedBounds_.height / 2;
     }
     this.textElement_.y(textY);
     this.icon_.setTransformationMatrix(1, 0, 0, 1, 0, horizontalAxis - this.iconSize_ / 2);
     this.layer_.setTransformationMatrix(1, 0, 0, 1, this.pixelBounds_.left, this.pixelBounds_.top);
 
+    if (!isNaN(this.applyFontGradient_)) {
+      var fc = /** @type {string} */ (this.getOption('fontColor'));
+      var fo = this.getOption('fontOpacity');
+      fo = /** @type {number} */ (goog.isDef(fo) ? fo : 1);
+      var grad = anychart.utils.getFadeGradient(this.applyFontGradient_, fo, fc);
+      this.getTextElement().fill(grad);
+    }
     this.markConsistent(anychart.ConsistencyState.BOUNDS);
   }
 
@@ -785,7 +799,14 @@ anychart.core.ui.LegendItem.prototype.applyFontColor_ = function(hover, opt_isIn
   this.applyTextSettings(/** @type {!acgraph.vector.Text} */(this.textElement_), !!opt_isInitial);
   var colorOption = /** @type {(acgraph.vector.Fill|acgraph.vector.Stroke)} */ (this.getOption('fontColor'));
   var fontColor = this.disabled_ ? this.disabledState_['fontColor'] : hover ? anychart.color.lighten(colorOption) : colorOption;
-  this.textElement_.color(fontColor);
+  if (isNaN(this.applyFontGradient_)) {
+    this.textElement_.color(fontColor);
+  } else {
+    var fo = this.getOption('fontOpacity');
+    fo = /** @type {number} */ (goog.isDef(fo) ? fo : 1);
+    var grad = anychart.utils.getFadeGradient(this.applyFontGradient_, fo, fontColor);
+    this.getTextElement().fill(grad);
+  }
 };
 
 
@@ -973,15 +994,26 @@ anychart.core.ui.LegendItem.prototype.calculateBounds_ = function() {
   var x = parentWidth ? anychart.utils.normalizeSize(/** @type {number|string} */(this.getOption('x')), parentWidth) : 0;
   var y = parentHeight ? anychart.utils.normalizeSize(/** @type {number|string} */(this.getOption('y')), parentHeight) : 0;
 
-
   if (legendItemMaxWidth) {
-    width = legendItemMaxWidth - (this.iconEnabled_ ? iconSize + this.getOption('iconTextSpacing') : 0);
-  } else if (this.textElement_.textOverflow() == acgraph.vector.Text.TextOverflow.ELLIPSIS) {
-    var overflowWidth;
-    overflowWidth = parentWidth ? Math.min(parentWidth - (this.iconEnabled_ ? iconSize + this.getOption('iconTextSpacing') : 0), width) : width;
-    overflowWidth = Math.max(overflowWidth, 0.00001);
-    width = overflowWidth;
-    height = legendItemMaxHeight ? legendItemMaxHeight : height;
+    var widthWithoutIcon = legendItemMaxWidth - (this.iconEnabled_ ? iconSize + this.getOption('iconTextSpacing') : 0);
+    if (widthWithoutIcon < width) {
+      if (this.textElement_.textOverflow() == acgraph.vector.Text.TextOverflow.ELLIPSIS) {
+        this.applyFontGradient_ = widthWithoutIcon / width;
+        width = widthWithoutIcon;
+      } else {
+        this.textElement_.width(widthWithoutIcon);
+        textBounds = this.textElement_.getBounds();
+        width = textBounds.width;
+        height = textBounds.height;
+        var overflowWidth = parentWidth ? Math.min(parentWidth - (this.iconEnabled_ ? iconSize + this.getOption('iconTextSpacing') : 0), width) : width;
+        overflowWidth = Math.max(overflowWidth, 0.00001);
+        width = overflowWidth;
+        height = legendItemMaxHeight ? legendItemMaxHeight : height;
+        this.applyFontGradient_ = NaN;
+      }
+    } else {
+      this.applyFontGradient_ = NaN;
+    }
   }
 
   width = (this.iconEnabled_ ? iconSize + this.getOption('iconTextSpacing') : 0) + width;
