@@ -2638,19 +2638,17 @@ anychart.tableModule.Table.prototype.contextMenuItemsProvider = function(context
     items['version-history'] = versionHistoryItem;
   }
 
-  return context['menuParent'].specificContextMenuItems(items, context);
+  return context['menuParent'].specificContextMenuItems(items);
 };
 
 
 /**
  * Specific set context menu items to chart.
  * @param {Object.<string, anychart.ui.ContextMenu.Item>} items Default items provided from chart.
- * @param {anychart.ui.ContextMenu.PrepareItemsContext} context Context object.
- * @param {boolean} isPointContext
  * @return {Object.<string, anychart.ui.ContextMenu.Item>}
  * @protected
  */
-anychart.tableModule.Table.prototype.specificContextMenuItems = function(items, context, isPointContext) {
+anychart.tableModule.Table.prototype.specificContextMenuItems = function(items) {
   return items;
 };
 
