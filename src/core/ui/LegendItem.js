@@ -991,6 +991,18 @@ anychart.core.ui.LegendItem.prototype.calculateBounds_ = function() {
   var legendItemMaxWidth = anychart.utils.normalizeSize(/** @type {number|string} */(this.getOption('maxWidth')), parentWidth);
   var legendItemMaxHeight = anychart.utils.normalizeSize(/** @type {number|string} */(this.getOption('maxHeight')), parentHeight);
 
+  if (isNaN(legendItemMaxWidth)) {
+    legendItemMaxWidth = parentWidth;
+  } else if (parentWidth) {
+    legendItemMaxWidth = Math.min(legendItemMaxWidth, parentWidth);
+  }
+
+  if (isNaN(legendItemMaxHeight)) {
+    legendItemMaxHeight = parentHeight;
+  } else if (parentHeight) {
+    legendItemMaxHeight = Math.min(legendItemMaxHeight, parentHeight);
+  }
+
   var x = parentWidth ? anychart.utils.normalizeSize(/** @type {number|string} */(this.getOption('x')), parentWidth) : 0;
   var y = parentHeight ? anychart.utils.normalizeSize(/** @type {number|string} */(this.getOption('y')), parentHeight) : 0;
 
