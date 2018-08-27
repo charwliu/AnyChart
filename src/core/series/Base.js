@@ -1807,7 +1807,8 @@ anychart.core.series.Base.prototype.getLegendIconColor = function(legendItemJson
     var opt = this.normal_.getOption(name);
     var defaultOpt = this.normal_.themeSettings[name];
     if (goog.isFunction(opt) && (opt == defaultOpt)) {
-      ctx = {'sourceColor': baseColor};
+      // ctx = {'sourceColor': baseColor};
+      ctx = this.createLegendContextProvider([{'sourceColor': {value: baseColor, type: anychart.enums.TokenType.STRING}}]);
       return opt.call(ctx, ctx);
     }
 
@@ -4322,10 +4323,11 @@ anychart.core.series.Base.prototype.createTooltipContextProvider = function() {
 
 /**
  * Creates context provider for legend items text formatter function.
+ * @param {(Array.<Object.<string, anychart.core.BaseContext.TypedValue>>)=} opt_addValues - Values to add.
  * @return {Object} Legend context provider.
  * @protected
  */
-anychart.core.series.Base.prototype.createLegendContextProvider = function() {
+anychart.core.series.Base.prototype.createLegendContextProvider = function(opt_addValues) {
   if (!this.legendProvider_)
     this.legendProvider_ = new anychart.format.Context(void 0, void 0, [this, this.chart]);
 
@@ -4334,6 +4336,13 @@ anychart.core.series.Base.prototype.createLegendContextProvider = function() {
     'chart': {value: this.getChart(), type: anychart.enums.TokenType.UNKNOWN},
     'seriesName': {value: this.name(), type: anychart.enums.TokenType.STRING}
   };
+
+  if (opt_addValues) {
+    for (var i = 0; i < opt_addValues.length; i++) {
+      goog.mixin(values, opt_addValues[i]);
+    }
+  }
+
   this.legendProvider_.statisticsSources([this, this.chart]);
 
   return this.legendProvider_.propagate(values);
