@@ -737,16 +737,18 @@ anychart.core.ui.LegendItem.prototype.draw = function() {
 
     var textLines = this.textElement_.getLines();
     var textY, horizontalAxis;
-    this.textElement_.x(/** @type {number} */(this.iconEnabled_ ? this.iconSize_ + this.getOption('iconTextSpacing') : 0));
+    var iconSize = /** @type {number} */(this.iconEnabled_ ? this.iconSize_ + this.getOption('iconTextSpacing') : 0);
+    this.textElement_.x(iconSize);
 
     if (textLines.length > 1) {
+      var strokeThickness = acgraph.vector.getThickness(/** @type {acgraph.vector.Stroke} */(this.getOption('iconStroke')));
       var maxTextSegmentHeight = 0;
       var firstTextLine = textLines[0];
       for (var i = 0, len = firstTextLine.length; i < len; i++) {
         maxTextSegmentHeight = Math.max(maxTextSegmentHeight, firstTextLine[i].height);
       }
 
-      horizontalAxis = Math.max(maxTextSegmentHeight, this.iconSize_) / 2;
+      horizontalAxis = Math.max(maxTextSegmentHeight, this.iconSize_ + strokeThickness) / 2;
       textY = horizontalAxis - maxTextSegmentHeight / 2;
     } else {
       horizontalAxis = this.pixelBounds_.height / 2;
@@ -1006,8 +1008,10 @@ anychart.core.ui.LegendItem.prototype.calculateBounds_ = function() {
   var x = parentWidth ? anychart.utils.normalizeSize(/** @type {number|string} */(this.getOption('x')), parentWidth) : 0;
   var y = parentHeight ? anychart.utils.normalizeSize(/** @type {number|string} */(this.getOption('y')), parentHeight) : 0;
 
+  var enabledIconSize = (this.iconEnabled_ ? iconSize + this.getOption('iconTextSpacing') : 0);
+
   if (legendItemMaxWidth) {
-    var widthWithoutIcon = legendItemMaxWidth - (this.iconEnabled_ ? iconSize + this.getOption('iconTextSpacing') : 0);
+    var widthWithoutIcon = legendItemMaxWidth - enabledIconSize;
     if (widthWithoutIcon < width) {
       if (this.textElement_.textOverflow() == acgraph.vector.Text.TextOverflow.ELLIPSIS) {
         this.applyFontGradient_ = widthWithoutIcon / width;
@@ -1017,10 +1021,9 @@ anychart.core.ui.LegendItem.prototype.calculateBounds_ = function() {
         textBounds = this.textElement_.getBounds();
         width = textBounds.width;
         height = textBounds.height;
-        var overflowWidth = parentWidth ? Math.min(parentWidth - (this.iconEnabled_ ? iconSize + this.getOption('iconTextSpacing') : 0), width) : width;
+        var overflowWidth = parentWidth ? Math.min(parentWidth - enabledIconSize, width) : width;
         overflowWidth = Math.max(overflowWidth, 0.00001);
         width = overflowWidth;
-        height = legendItemMaxHeight ? legendItemMaxHeight : height;
         this.applyFontGradient_ = NaN;
       }
     } else {
@@ -1028,7 +1031,11 @@ anychart.core.ui.LegendItem.prototype.calculateBounds_ = function() {
     }
   }
 
-  width = (this.iconEnabled_ ? iconSize + this.getOption('iconTextSpacing') : 0) + width;
+  if (legendItemMaxHeight) {
+    height = Math.min(legendItemMaxHeight, height);
+  }
+
+  width = enabledIconSize + width;
   height = Math.max((this.iconEnabled_ ? iconSize : 0), height);
 
   if (parentBounds) {
