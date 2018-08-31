@@ -2645,10 +2645,11 @@ anychart.tableModule.Table.prototype.contextMenuItemsProvider = function(context
 /**
  * Specific set context menu items to chart.
  * @param {Object.<string, anychart.ui.ContextMenu.Item>} items Default items provided from chart.
+ * @param {anychart.ui.ContextMenu.PrepareItemsContext} context Context object.
  * @return {Object.<string, anychart.ui.ContextMenu.Item>}
  * @protected
  */
-anychart.tableModule.Table.prototype.specificContextMenuItems = function(items) {
+anychart.tableModule.Table.prototype.specificContextMenuItems = function(items, context) {
   return items;
 };
 
