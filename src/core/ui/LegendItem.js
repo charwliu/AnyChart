@@ -48,7 +48,8 @@ anychart.core.ui.LegendItem = function() {
   this.predefinedBounds_ = null;
 
   /**
-   * TODO (A.Kudryavtsev): Describe.
+   * Ratio value to apply font fade gradient.
+   * If is NaN - no fade gradient is applied.
    * @type {number}
    * @private
    */
