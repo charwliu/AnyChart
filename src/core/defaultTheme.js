@@ -1040,7 +1040,7 @@ goog.exportSymbol('anychart.themes.defaultTheme', {
     'enabled': false,
     'vAlign': 'bottom',
     'fontSize': 12,
-    'textOverflow': '...',
+    'textOverflow': 'fade',
     'itemsLayout': 'horizontal',
     'positionMode': 'outside',
     'itemsSpacing': 15,

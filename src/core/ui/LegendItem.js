@@ -977,7 +977,7 @@ anychart.core.ui.LegendItem.prototype.calculateBounds_ = function() {
   var parentBounds = /** @type {anychart.math.Rect} */(this.parentBounds());
   var parentWidth, parentHeight;
   /** @type {anychart.math.Rect} */
-  var textBounds = this.predefinedBounds_;
+  var textBounds = this.text().indexOf('\n') < 0 ? this.predefinedBounds_ : this.textElement_.getBounds();
   var width = textBounds.width;
   var height = textBounds.height;
 
