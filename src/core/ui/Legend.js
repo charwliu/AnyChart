@@ -1544,8 +1544,9 @@ anychart.core.ui.Legend.prototype.draw = function() {
 
     if (acgraph.type() == acgraph.StageType.SVG) {
       this.renderer = acgraph.getRenderer();
+      var m = this.renderer.createMeasurement();
       this.measurementG_ = this.renderer.createLayerElement();
-      goog.dom.appendChild(this.renderer.measurement_, this.measurementG_);
+      goog.dom.appendChild(m, this.measurementG_);
     }
   }
 
