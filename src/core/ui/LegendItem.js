@@ -759,13 +759,7 @@ anychart.core.ui.LegendItem.prototype.draw = function() {
     this.icon_.setTransformationMatrix(1, 0, 0, 1, 0, horizontalAxis - this.iconSize_ / 2);
     this.layer_.setTransformationMatrix(1, 0, 0, 1, this.pixelBounds_.left, this.pixelBounds_.top);
 
-    if (!isNaN(this.applyFontGradient_)) {
-      var fc = /** @type {string} */ (this.getOption('fontColor'));
-      var fo = this.getOption('fontOpacity');
-      fo = /** @type {number} */ (goog.isDef(fo) ? fo : 1);
-      var grad = anychart.utils.getFadeGradient(this.applyFontGradient_, fo, fc);
-      this.getTextElement().fill(grad);
-    }
+    this.applyFontColor_(this.hovered_, isInitial);
     this.markConsistent(anychart.ConsistencyState.BOUNDS);
   }
 
@@ -803,7 +797,7 @@ anychart.core.ui.LegendItem.prototype.applyFontColor_ = function(hover, opt_isIn
   var colorOption = /** @type {(acgraph.vector.Fill|acgraph.vector.Stroke)} */ (this.getOption('fontColor'));
   var fontColor = this.disabled_ ? this.disabledState_['fontColor'] : hover ? anychart.color.lighten(colorOption) : colorOption;
   if (isNaN(this.applyFontGradient_)) {
-    this.textElement_.color(fontColor);
+    this.textElement_.fill(fontColor);
   } else {
     var fo = this.getOption('fontOpacity');
     fo = /** @type {number} */ (goog.isDef(fo) ? fo : 1);
@@ -994,47 +988,71 @@ anychart.core.ui.LegendItem.prototype.calculateBounds_ = function() {
   var legendItemMaxWidth = anychart.utils.normalizeSize(/** @type {number|string} */(this.getOption('maxWidth')), parentWidth);
   var legendItemMaxHeight = anychart.utils.normalizeSize(/** @type {number|string} */(this.getOption('maxHeight')), parentHeight);
 
-  if (isNaN(legendItemMaxWidth)) {
-    legendItemMaxWidth = parentWidth;
-  } else if (parentWidth) {
-    legendItemMaxWidth = Math.min(legendItemMaxWidth, parentWidth);
-  }
-
-  if (isNaN(legendItemMaxHeight)) {
-    legendItemMaxHeight = parentHeight;
-  } else if (parentHeight) {
-    legendItemMaxHeight = Math.min(legendItemMaxHeight, parentHeight);
-  }
+  // if (isNaN(legendItemMaxWidth)) {
+  //   legendItemMaxWidth = parentWidth;
+  // } else if (parentWidth) {
+  //   legendItemMaxWidth = Math.min(legendItemMaxWidth, parentWidth);
+  // }
+  //
+  // if (isNaN(legendItemMaxHeight)) {
+  //   legendItemMaxHeight = parentHeight;
+  // } else if (parentHeight) {
+  //   legendItemMaxHeight = Math.min(legendItemMaxHeight, parentHeight);
+  // }
 
   var x = parentWidth ? anychart.utils.normalizeSize(/** @type {number|string} */(this.getOption('x')), parentWidth) : 0;
   var y = parentHeight ? anychart.utils.normalizeSize(/** @type {number|string} */(this.getOption('y')), parentHeight) : 0;
 
   var enabledIconSize = (this.iconEnabled_ ? iconSize + this.getOption('iconTextSpacing') : 0);
 
+  this.applyFontGradient_ = NaN;
   if (legendItemMaxWidth) {
     var widthWithoutIcon = legendItemMaxWidth - enabledIconSize;
-    if (widthWithoutIcon < width) {
-      if (this.textElement_.textOverflow() == acgraph.vector.Text.TextOverflow.ELLIPSIS) {
-        this.applyFontGradient_ = widthWithoutIcon / width;
-        width = widthWithoutIcon;
-      } else {
-        this.textElement_.width(widthWithoutIcon);
-        textBounds = this.textElement_.getBounds();
-        width = textBounds.width;
-        height = textBounds.height;
-        var overflowWidth = parentWidth ? Math.min(parentWidth - enabledIconSize, width) : width;
-        overflowWidth = Math.max(overflowWidth, 0.00001);
-        width = overflowWidth;
-        this.applyFontGradient_ = NaN;
-      }
+    if (this.textElement_.textOverflow() == acgraph.vector.Text.TextOverflow.ELLIPSIS) {
+      this.applyFontGradient_ = widthWithoutIcon / width;
     } else {
-      this.applyFontGradient_ = NaN;
+      this.textElement_.width(widthWithoutIcon);
     }
-  }
+    width = legendItemMaxWidth;
+  } else {
+    var overflowWidth = parentWidth ? Math.min(parentWidth - enabledIconSize, width) : width;
+    overflowWidth = Math.max(overflowWidth, 0.00001);
 
-  if (legendItemMaxHeight) {
-    height = Math.min(legendItemMaxHeight, height);
+    if (this.textElement_.textOverflow() == acgraph.vector.Text.TextOverflow.ELLIPSIS) {
+      this.applyFontGradient_ = overflowWidth / width;
+    } else {
+      this.textElement_.width(overflowWidth);
+      this.textElement_.height(legendItemMaxHeight ? legendItemMaxHeight : height);
+    }
+    width = overflowWidth + enabledIconSize;
   }
+  if (isNaN(this.applyFontGradient_))
+    debugger;
+
+  // if (legendItemMaxWidth) {
+  //   var widthWithoutIcon = legendItemMaxWidth - enabledIconSize;
+  //   if (widthWithoutIcon < width) {
+  //     if (this.textElement_.textOverflow() == acgraph.vector.Text.TextOverflow.ELLIPSIS) {
+  //       this.applyFontGradient_ = widthWithoutIcon / width;
+  //       width = widthWithoutIcon;
+  //     } else {
+  //       this.textElement_.width(widthWithoutIcon);
+  //       textBounds = this.textElement_.getBounds();
+  //       width = textBounds.width;
+  //       height = textBounds.height;
+  //       var overflowWidth = parentWidth ? Math.min(parentWidth - enabledIconSize, width) : width;
+  //       overflowWidth = Math.max(overflowWidth, 0.00001);
+  //       width = overflowWidth;
+  //       this.applyFontGradient_ = NaN;
+  //     }
+  //   } else {
+  //     this.applyFontGradient_ = NaN;
+  //   }
+  // }
+  //
+  // if (legendItemMaxHeight) {
+  //   height = Math.min(legendItemMaxHeight, height);
+  // }
 
   width = enabledIconSize + width;
   height = Math.max((this.iconEnabled_ ? iconSize : 0), height);
