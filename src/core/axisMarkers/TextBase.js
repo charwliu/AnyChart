@@ -127,7 +127,9 @@ anychart.core.axisMarkers.TextBase.prototype.createAxisMarkerEvent_ = function(e
     'target': this,
     'originalEvent': event,
     'rawValue': value,
-    'formattedValue': 'Value: ' + value
+    'formattedValue': 'Value: ' + value,
+    'offsetX': event.offsetX,
+    'offsetY': event.offsetY
   };
 };
 
