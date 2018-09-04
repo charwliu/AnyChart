@@ -121,10 +121,13 @@ anychart.core.axisMarkers.TextBase.prototype.createAxisMarkerEvent_ = function(e
     default:
       return null;
   }
+  var value = this.value();
   return {
     'type': type,
     'target': this,
-    'originalEvent': event
+    'originalEvent': event,
+    'rawValue': value,
+    'formattedValue': 'Value: ' + value
   };
 };
 
