@@ -970,8 +970,9 @@ anychart.core.ui.LegendItem.prototype.invalidateParentBounds = function() {
 anychart.core.ui.LegendItem.prototype.calculateBounds_ = function() {
   var parentBounds = /** @type {anychart.math.Rect} */(this.parentBounds());
   var parentWidth, parentHeight;
+  var t = this.text();
   /** @type {anychart.math.Rect} */
-  var textBounds = this.text().indexOf('\n') < 0 ? this.predefinedBounds_ : this.textElement_.getBounds();
+  var textBounds = goog.isNull(t) || (t.indexOf('\n') < 0) ? this.predefinedBounds_ : this.textElement_.getBounds();
   var width = textBounds.width;
   var height = textBounds.height;
 
@@ -1008,7 +1009,7 @@ anychart.core.ui.LegendItem.prototype.calculateBounds_ = function() {
   this.applyFontGradient_ = NaN;
   if (legendItemMaxWidth) {
     var widthWithoutIcon = legendItemMaxWidth - enabledIconSize;
-    if (this.textElement_.textOverflow() == acgraph.vector.Text.TextOverflow.ELLIPSIS) {
+    if (width && width > widthWithoutIcon && this.textElement_.textOverflow() == acgraph.vector.Text.TextOverflow.ELLIPSIS) {
       this.applyFontGradient_ = widthWithoutIcon / width;
     } else {
       this.textElement_.width(widthWithoutIcon);
@@ -1019,15 +1020,14 @@ anychart.core.ui.LegendItem.prototype.calculateBounds_ = function() {
     overflowWidth = Math.max(overflowWidth, 0.00001);
 
     if (this.textElement_.textOverflow() == acgraph.vector.Text.TextOverflow.ELLIPSIS) {
-      this.applyFontGradient_ = overflowWidth / width;
+      if (width && width > overflowWidth)
+        this.applyFontGradient_ = overflowWidth / width;
     } else {
       this.textElement_.width(overflowWidth);
       this.textElement_.height(legendItemMaxHeight ? legendItemMaxHeight : height);
     }
     width = overflowWidth + enabledIconSize;
   }
-  if (isNaN(this.applyFontGradient_))
-    debugger;
 
   // if (legendItemMaxWidth) {
   //   var widthWithoutIcon = legendItemMaxWidth - enabledIconSize;
@@ -1054,7 +1054,6 @@ anychart.core.ui.LegendItem.prototype.calculateBounds_ = function() {
   //   height = Math.min(legendItemMaxHeight, height);
   // }
 
-  width = enabledIconSize + width;
   height = Math.max((this.iconEnabled_ ? iconSize : 0), height);
 
   if (parentBounds) {
