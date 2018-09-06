@@ -128,7 +128,7 @@ anychart.core.axisMarkers.TextBase.prototype.createAxisMarkerEvent_ = function(e
     'target': this,
     'originalEvent': event,
     'rawValue': this.valueInternal(),
-    'formattedValue': this.getFormattedValue_(),
+    'formattedValue': this.getFormattedValue(),
     'offsetX': event.offsetX,
     'offsetY': event.offsetY
   };
@@ -138,9 +138,9 @@ anychart.core.axisMarkers.TextBase.prototype.createAxisMarkerEvent_ = function(e
 /**
  * Retruns formatted value to use with createAxisMarkerEvent_
  * @return {string}
- * @private
+ * @protected
  */
-anychart.core.axisMarkers.TextBase.prototype.getFormattedValue_ = function() {
+anychart.core.axisMarkers.TextBase.prototype.getFormattedValue = function() {
   return 'Value: ' + this.valueInternal();
 };
 
