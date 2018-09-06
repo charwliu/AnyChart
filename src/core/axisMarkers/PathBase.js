@@ -123,21 +123,12 @@ anychart.core.axisMarkers.PathBase.prototype.createAxisMarkerEvent_ = function(e
 
 
 /**
- * @return {*}
- * @private
- */
-anychart.core.axisMarkers.PathBase.prototype.getRawValue_ = function() {
-  return this.value();
-};
-
-
-/**
  * Retruns formatted value to use with createAxisMarkerEvent_
  * @return {string}
  * @private
  */
 anychart.core.axisMarkers.PathBase.prototype.getFormattedValue_ = function() {
-  return 'Value: ' + this.value();
+  return 'Value: ' + this.valueInternal();
 };
 
 
