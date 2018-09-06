@@ -52,10 +52,9 @@ goog.inherits(anychart.core.axisMarkers.Range, anychart.core.axisMarkers.PathBas
 //  Events
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * @return {string}
- * @private
+ * @inheritDoc
  */
-anychart.core.axisMarkers.Range.prototype.getFormattedValue_ = function() {
+anychart.core.axisMarkers.Range.prototype.getFormattedValue = function() {
   return 'From: ' + this.from() + ' to: ' + this.to();
 };
 
