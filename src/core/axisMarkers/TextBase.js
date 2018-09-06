@@ -90,10 +90,10 @@ anychart.core.axisMarkers.TextBase = function() {
 
 };
 goog.inherits(anychart.core.axisMarkers.TextBase, anychart.core.ui.LabelBase);
+
+
 //endregion
 //region -- Events
-
-
 /** @inheritDoc */
 anychart.core.axisMarkers.TextBase.prototype.handleMouseEvent = function(event) {
   var evt = this.createAxisMarkerEvent_(event);
