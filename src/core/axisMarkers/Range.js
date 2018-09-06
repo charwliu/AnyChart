@@ -49,6 +49,30 @@ goog.inherits(anychart.core.axisMarkers.Range, anychart.core.axisMarkers.PathBas
 
 
 //----------------------------------------------------------------------------------------------------------------------
+//  Events
+//----------------------------------------------------------------------------------------------------------------------
+/**
+ * @return {{from: *, to: *}}
+ * @private
+ */
+anychart.core.axisMarkers.Range.prototype.getRawValue_ = function() {
+  return {
+    'from': this.from(),
+    'to': this.to()
+  };
+};
+
+
+/**
+ * @return {string}
+ * @private
+ */
+anychart.core.axisMarkers.Range.prototype.getFormattedValue_ = function() {
+  return 'From: ' + this.from() + ' to: ' + this.to();
+};
+
+
+//----------------------------------------------------------------------------------------------------------------------
 //  States and signals.
 //----------------------------------------------------------------------------------------------------------------------
 /**

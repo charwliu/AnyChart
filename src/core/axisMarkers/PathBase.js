@@ -69,6 +69,18 @@ goog.inherits(anychart.core.axisMarkers.PathBase, anychart.core.VisualBase);
 
 
 /**
+ * @typedef {{
+ *  from: (anychart.enums.GanttDateTimeMarkers|number),
+ *  to: (anychart.enums.GanttDateTimeMarkers|number)
+ * }}
+ */
+anychart.core.axisMarkers.PathBase.Range;
+
+
+//----------------------------------------------------------------------------------------------------------------------
+// Events
+//----------------------------------------------------------------------------------------------------------------------
+/**
  * @param {anychart.core.MouseEvent} event
  */
 anychart.core.axisMarkers.PathBase.prototype.handleMouseEvent = function(event) {
@@ -98,13 +110,12 @@ anychart.core.axisMarkers.PathBase.prototype.createAxisMarkerEvent_ = function(e
     default:
       return null;
   }
-  var value = this.value();
   return {
     'type': type,
     'target': this,
     'originalEvent': event,
-    'rawValue': value,
-    'formattedValue': 'Value: ' + value,
+    'rawValue': this.getRawValue_(),
+    'formattedValue': this.getFormattedValue_(),
     'offsetX': event.offsetX,
     'offsetY': event.offsetY
   };
@@ -112,12 +123,22 @@ anychart.core.axisMarkers.PathBase.prototype.createAxisMarkerEvent_ = function(e
 
 
 /**
- * @typedef {{
- *  from: (anychart.enums.GanttDateTimeMarkers|number),
- *  to: (anychart.enums.GanttDateTimeMarkers|number)
- * }}
+ * @return {*}
+ * @private
  */
-anychart.core.axisMarkers.PathBase.Range;
+anychart.core.axisMarkers.PathBase.prototype.getRawValue_ = function() {
+  return this.value();
+};
+
+
+/**
+ * Retruns formatted value to use with createAxisMarkerEvent_
+ * @return {string}
+ * @private
+ */
+anychart.core.axisMarkers.PathBase.prototype.getFormattedValue_ = function() {
+  return 'Value: ' + this.value();
+};
 
 
 //----------------------------------------------------------------------------------------------------------------------

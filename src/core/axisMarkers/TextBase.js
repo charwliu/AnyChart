@@ -90,6 +90,8 @@ anychart.core.axisMarkers.TextBase = function() {
 
 };
 goog.inherits(anychart.core.axisMarkers.TextBase, anychart.core.ui.LabelBase);
+//endregion
+//region -- Events
 
 
 /** @inheritDoc */
@@ -121,16 +123,34 @@ anychart.core.axisMarkers.TextBase.prototype.createAxisMarkerEvent_ = function(e
     default:
       return null;
   }
-  var value = this.value();
   return {
     'type': type,
     'target': this,
     'originalEvent': event,
-    'rawValue': value,
-    'formattedValue': 'Value: ' + value,
+    'rawValue': this.getRawValue_(),
+    'formattedValue': this.getFormattedValue_(),
     'offsetX': event.offsetX,
     'offsetY': event.offsetY
   };
+};
+
+
+/**
+ * @return {*}
+ * @private
+ */
+anychart.core.axisMarkers.TextBase.prototype.getRawValue_ = function() {
+  return this.value();
+};
+
+
+/**
+ * Retruns formatted value to use with createAxisMarkerEvent_
+ * @return {string}
+ * @private
+ */
+anychart.core.axisMarkers.TextBase.prototype.getFormattedValue_ = function() {
+  return 'Value: ' + this.value();
 };
 
 
