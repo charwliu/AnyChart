@@ -114,7 +114,7 @@ anychart.core.axisMarkers.PathBase.prototype.createAxisMarkerEvent_ = function(e
     'type': type,
     'target': this,
     'originalEvent': event,
-    'rawValue': this.getRawValue_(),
+    'rawValue': this.valueInternal(),
     'formattedValue': this.getFormattedValue_(),
     'offsetX': event.offsetX,
     'offsetY': event.offsetY

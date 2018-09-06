@@ -141,7 +141,7 @@ anychart.core.axisMarkers.TextBase.prototype.createAxisMarkerEvent_ = function(e
  * @private
  */
 anychart.core.axisMarkers.TextBase.prototype.getFormattedValue_ = function() {
-  return 'Value: ' + this.value();
+  return 'Value: ' + this.valueInternal();
 };
 
 
