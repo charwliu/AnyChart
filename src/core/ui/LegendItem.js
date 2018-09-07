@@ -797,6 +797,7 @@ anychart.core.ui.LegendItem.prototype.applyFontColor_ = function(hover, opt_isIn
   var colorOption = /** @type {(acgraph.vector.Fill|acgraph.vector.Stroke)} */ (this.getOption('fontColor'));
   var fontColor = this.disabled_ ? this.disabledState_['fontColor'] : hover ? anychart.color.lighten(colorOption) : colorOption;
   if (isNaN(this.applyFontGradient_)) {
+    this.textElement_.color(fontColor);
     this.textElement_.fill(fontColor);
   } else {
     var fo = this.getOption('fontOpacity');
@@ -1013,6 +1014,7 @@ anychart.core.ui.LegendItem.prototype.calculateBounds_ = function() {
       this.applyFontGradient_ = widthWithoutIcon / width;
     } else {
       this.textElement_.width(widthWithoutIcon);
+      textBounds = this.textElement_.getBounds();
     }
     width = legendItemMaxWidth;
   } else {
@@ -1022,39 +1024,29 @@ anychart.core.ui.LegendItem.prototype.calculateBounds_ = function() {
     if (this.textElement_.textOverflow() == acgraph.vector.Text.TextOverflow.ELLIPSIS) {
       if (width && width > overflowWidth)
         this.applyFontGradient_ = overflowWidth / width;
-    } else {
-      this.textElement_.width(overflowWidth);
-      this.textElement_.height(legendItemMaxHeight ? legendItemMaxHeight : height);
     }
+
+    // else {
+    //   this.textElement_.width(overflowWidth);
+    //   this.textElement_.height(legendItemMaxHeight ? legendItemMaxHeight : height);
+    // }
     width = overflowWidth + enabledIconSize;
   }
 
-  // if (legendItemMaxWidth) {
-  //   var widthWithoutIcon = legendItemMaxWidth - enabledIconSize;
-  //   if (widthWithoutIcon < width) {
-  //     if (this.textElement_.textOverflow() == acgraph.vector.Text.TextOverflow.ELLIPSIS) {
-  //       this.applyFontGradient_ = widthWithoutIcon / width;
-  //       width = widthWithoutIcon;
-  //     } else {
-  //       this.textElement_.width(widthWithoutIcon);
-  //       textBounds = this.textElement_.getBounds();
-  //       width = textBounds.width;
-  //       height = textBounds.height;
-  //       var overflowWidth = parentWidth ? Math.min(parentWidth - enabledIconSize, width) : width;
-  //       overflowWidth = Math.max(overflowWidth, 0.00001);
-  //       width = overflowWidth;
-  //       this.applyFontGradient_ = NaN;
-  //     }
-  //   } else {
-  //     this.applyFontGradient_ = NaN;
-  //   }
-  // }
-  //
-  // if (legendItemMaxHeight) {
-  //   height = Math.min(legendItemMaxHeight, height);
-  // }
 
-  height = Math.max((this.iconEnabled_ ? iconSize : 0), height);
+  var textLines = this.textElement_.getLines();
+  if (textLines.length > 1) {
+    var maxTextSegmentHeight = 0;
+    var firstTextLine = textLines[0];
+    for (var i = 0, len = firstTextLine.length; i < len; i++) {
+      maxTextSegmentHeight = Math.max(maxTextSegmentHeight, firstTextLine[i].height);
+    }
+
+    var h2 = textBounds.height - maxTextSegmentHeight / 2;
+    height = Math.max(maxTextSegmentHeight / 2, this.iconSize_ / 2) + Math.max(h2, this.iconSize_ / 2);
+  } else {
+    height = Math.max((this.iconEnabled_ ? iconSize : 0), height);
+  }
 
   if (parentBounds) {
     this.pixelBounds_ = new anychart.math.Rect(
