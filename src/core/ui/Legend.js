@@ -2089,6 +2089,11 @@ anychart.core.ui.Legend.prototype.setupByJSON = function(config, opt_default) {
 anychart.core.ui.Legend.prototype.disposeInternal = function() {
   anychart.core.ui.Legend.base(this, 'disposeInternal');
 
+  if (this.measurementG_) {
+    goog.dom.removeChildren(this.measurementG_);
+    goog.dom.removeNode(this.measurementG_);
+  }
+
   goog.disposeAll(
       this.dragHandler_,
       this.tooltip_,
@@ -2102,7 +2107,8 @@ anychart.core.ui.Legend.prototype.disposeInternal = function() {
       this.title_,
       this.titleSeparator_,
       this.tooltip_,
-      this.rootElement
+      this.rootElement,
+      this.measurementG_
   );
 
   this.dragHandler_ = null;
@@ -2118,6 +2124,7 @@ anychart.core.ui.Legend.prototype.disposeInternal = function() {
   this.titleSeparator_ = null;
   this.tooltip_ = null;
   this.rootElement = null;
+  this.measurementG_ = null;
 };
 
 

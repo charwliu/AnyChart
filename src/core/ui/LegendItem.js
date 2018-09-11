@@ -1318,6 +1318,8 @@ anychart.core.ui.LegendItem.prototype.setupByJSON = function(config, opt_default
 anychart.core.ui.LegendItem.prototype.disposeInternal = function() {
   anychart.core.ui.LegendItem.base(this, 'disposeInternal');
 
+  this.predefinedEl_ = null;
+
   goog.disposeAll(
       this.layer_,
       this.textElement_,
