@@ -2638,7 +2638,7 @@ anychart.tableModule.Table.prototype.contextMenuItemsProvider = function(context
     items['version-history'] = versionHistoryItem;
   }
 
-  return context['menuParent'].specificContextMenuItems(items);
+  return context['menuParent'].specificContextMenuItems(items, context);
 };
 
 
