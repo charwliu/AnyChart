@@ -729,7 +729,8 @@ anychart.tableModule.Table.prototype.draw = function() {
 
   if (!this.contextMenu_) {
     this.contextMenu({fromTheme: true, enabled: true});
-    this.contextMenu_['attach'](this);
+    if (this.contextMenu_)
+      this.contextMenu_['attach'](this);
   }
 
   if (manualSuspend) stage.resume();
@@ -2437,7 +2438,30 @@ anychart.tableModule.Table.prototype.disposeInternal = function() {
 };
 
 
-//region --- Save as csv / Export to csv/xlsx
+//region --- Export settings / Save as csv / Export to csv/xlsx
+/**
+ * Table exports settings.
+ * @param {Object=} opt_value .
+ * @return {anychart.tableModule.Table|anychart.exportsModule.Exports}
+ */
+anychart.tableModule.Table.prototype.exports = function(opt_value) {
+  var exports = goog.global['anychart']['exports'];
+  if (exports) {
+    if (!this.exports_)
+      this.exports_ = exports.create();
+  } else {
+    anychart.core.reporting.error(anychart.enums.ErrorCode.NO_FEATURE_IN_MODULE, null, ['Exporting']);
+  }
+
+  if (goog.isDef(opt_value) && this.exports_) {
+    this.exports_.setupByJSON(opt_value);
+    return this;
+  }
+
+  return this.exports_;
+};
+
+
 /**
  * Returns CSV string with series data.
  * @param {Object.<string, (string|boolean|undefined)>=} opt_csvSettings CSV settings.
@@ -2577,14 +2601,14 @@ anychart.tableModule.table = function(opt_rowsCount, opt_colsCount) {
 //
 //------------------------------------------------------------------------------
 /**
- * Creates context menu for chart.
+ * Creates context menu for table.
  * @param {(Object|boolean|null)=} opt_value
  * @return {anychart.ui.ContextMenu|!anychart.tableModule.Table}
  */
 anychart.tableModule.Table.prototype.contextMenu = function(opt_value) {
   if (!this.contextMenu_) {
     // suppress NO_FEATURE_IN_MODULE warning
-    this.contextMenu_ = anychart.window['anychart']['ui']['contextMenu'](!!goog.isObject(opt_value) && opt_value['fromTheme']);
+    this.contextMenu_ = anychart.window['anychart']['ui']['contextMenu'](true);
     if (this.contextMenu_) {
       this.contextMenu_['itemsProvider'](this.contextMenuItemsProvider);
     }
@@ -2968,6 +2992,7 @@ anychart.tableModule.Table.prototype.isFullScreenAvailable = function() {
   proto['toCsv'] = proto.toCsv;
   proto['saveAsCsv'] = proto.saveAsCsv;
   proto['saveAsXlsx'] = proto.saveAsXlsx;
+  proto['exports'] = proto.exports;
 
   proto['shareWithFacebook'] = proto.shareWithFacebook;//inherited
   proto['shareWithTwitter'] = proto.shareWithTwitter;//inherited
