@@ -222,9 +222,6 @@ goog.mixin(goog.global['anychart']['themes']['defaultTheme'], {
       'defaultLineMarkerSettings': {
         'zIndex': 200.2
       },
-      'defaultRangeMarkerSettings': {
-        'zIndex': 200.1
-      },
       'defaultTextMarkerSettings': {
         'zIndex': 200.3
       },
