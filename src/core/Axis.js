@@ -1274,8 +1274,8 @@ anychart.core.Axis.prototype.dropBoundsCache = function() {
   if (this.labelsBoundingRects_) this.labelsBoundingRects_.length = 0;
   this.labelsBounds_.length = 0;
   this.minorLabelsBounds_.length = 0;
-  this.pixelBoundsWithInside = null;
-  this.pixelBounds = null;
+  // this.pixelBoundsWithInside = null;
+  // this.pixelBounds = null;
 };
 
 
@@ -1620,7 +1620,7 @@ anychart.core.Axis.prototype.getPixelBounds = function(opt_includeInsideContent)
     }
     this.markConsistent(anychart.ConsistencyState.BOUNDS);
   }
-  return affectInsideContent? this.pixelBoundsWithInside : this.pixelBounds;
+  return affectInsideContent ? this.pixelBoundsWithInside : this.pixelBounds;
 };
 
 
@@ -1632,9 +1632,9 @@ anychart.core.Axis.prototype.getPixelBounds = function(opt_includeInsideContent)
 anychart.core.Axis.prototype.insideBounds = function(opt_value) {
   if (goog.isDef(opt_value)) {
     this.insideBounds_ = opt_value;
-    this.dropOverlappedLabelsCache_();
-    this.dropStaggeredLabelsCache_();
-    this.dropBoundsCache();
+    // this.dropOverlappedLabelsCache_();
+    // this.dropStaggeredLabelsCache_();
+    // this.dropBoundsCache();
     return this;
   }
 
